@@ -82,7 +82,7 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 		$response = array(
 			'name'               => 'Dumb store name',
 			'email'              => 'dumb@store.email',
-			'api-key'						 => $options['mailchimp_api_key'],
+			'api-key'						 => $options,
 		);
 		return rest_ensure_response( $response );
 	}
