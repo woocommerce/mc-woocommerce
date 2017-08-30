@@ -54,6 +54,11 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_settings' ),
 			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'update_settings' ),
+				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+			),
 			'schema' => array( $this, 'get_settings_schema' ),
 		) );
 	}
@@ -82,6 +87,13 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 		return rest_ensure_response( $options );
 	}
 
+	public function update_options( $request ) {
+
+		//validatePostApiKey
+
+		return rest_ensure_response( $request );
+	}
+
 	/**
 	 * Get the payment gateway schema, conforming to JSON Schema.
 	 *
@@ -93,13 +105,8 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 			'title'      => 'store_settings',
 			'type'       => 'object',
 			'properties' => array(
-				'name' => array(
-					'description' => __( 'Store name.', 'woocommerce' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'email' => array(
-					'description' => __( 'Store email.', 'woocommerce' ),
+				'api_key' => array(
+					'description' => __( 'MailChimp api key.', 'woocommerce' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
