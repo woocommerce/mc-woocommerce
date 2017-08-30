@@ -87,7 +87,7 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 		return rest_ensure_response( $options );
 	}
 
-	public function update_options( $request ) {
+	public function update_settings( $request ) {
 
 		//validatePostApiKey
 
