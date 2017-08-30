@@ -79,12 +79,7 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 	 */
 	public function get_settings( $request ) {
 		$options = get_option('mailchimp-woocommerce', array());
-		$response = array(
-			'name'               => 'Dumb store name',
-			'email'              => 'dumb@store.email',
-			'api-key'						 => $options,
-		);
-		return rest_ensure_response( $response );
+		return rest_ensure_response( $options );
 	}
 
 	/**
