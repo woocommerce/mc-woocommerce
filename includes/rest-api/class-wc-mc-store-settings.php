@@ -83,7 +83,8 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_settings( $request ) {
-		$options = get_option('mailchimp-woocommerce', array());
+		$options = get_option('mailchimp-woocommerce', array() );
+		$options['active_tab'] = isset($options['active_tab']) ? $options['active_tab'] : "api_key";
 		return rest_ensure_response( $options );
 	}
 
