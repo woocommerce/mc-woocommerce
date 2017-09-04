@@ -54,12 +54,15 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_settings' ),
 			),
+			'schema' => array( $this, 'get_settings_schema' ),
+		) );
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/api_key', array(
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => array( $this, 'update_settings' ),
 				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
 			),
-			'schema' => array( $this, 'get_settings_schema' ),
+		'schema' => array( $this, 'get_settings_schema' ),
 		) );
 	}
 
