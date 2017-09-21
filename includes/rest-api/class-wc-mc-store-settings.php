@@ -30,7 +30,7 @@ class MailChimp_Woocommerce_Params_Checker extends MailChimp_Woocommerce_Admin {
 	}
 
 	public function validateStoreInfo( $params ) {
-		return this.validatePostStoreInfo( $params );
+		return $this->validatePostStoreInfo( $params );
 	}
 }
 
