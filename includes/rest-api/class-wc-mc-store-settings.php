@@ -139,7 +139,7 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 	public function update_store_info( $request ) {
 		$parameters     = $request->get_params();
 		$handler        = MailChimp_Woocommerce_Params_Checker::connect();
-		$data           = $handler->validatePostStoreInfo( $parameters );
+		$data           = $handler->validateStoreInfo( $parameters );
 		$options        = get_option('mailchimp-woocommerce', array());
 		$merged_options = (isset($data) && is_array($data)) ? array_merge($options, $data) : $options;
 		update_option('mailchimp-woocommerce', $merged_options);
