@@ -53,16 +53,23 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_settings' ),
-			),
-			'schema' => array( $this, 'get_settings_schema' ),
+			)
 		) );
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/api_key', array(
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( $this, 'update_settings' ),
+				'callback'            => array( $this, 'update_api_key' ),
 				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
 			),
-		'schema' => array( $this, 'get_settings_schema' ),
+		'schema' => array( $this, 'get_api_key_schema' ),
+		) );
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/store_info', array(
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'update_store_info' ),
+				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+			),
+		'schema' => array( $this, 'get_store_info_schema' ),
 		) );
 	}
 
@@ -91,7 +98,7 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 		return rest_ensure_response( $options );
 	}
 
-	public function update_settings( $request ) {
+	public function update_api_key( $request ) {
 		$parameters     = $request->get_params();
 		$handler        = MailChimp_Woocommerce_Admin::connect();
 		$data           = $handler->validatePostApiKey( $parameters );
@@ -106,7 +113,7 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 	 *
 	 * @return array
 	 */
-	public function get_settings_schema() {
+	public function get_api_key_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'store_settings',
@@ -114,6 +121,83 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 			'properties' => array(
 				'api_key' => array(
 					'description' => __( 'MailChimp api key.', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+			),
+		);
+
+		return $this->add_additional_fields_schema( $schema );
+	}
+
+	public function update_store_info( $request ) {
+		$parameters     = $request->get_params();
+		$handler        = MailChimp_Woocommerce_Admin::connect();
+		$data           = $handler->validatePostStoreInfo( $parameters );
+		$options        = get_option('mailchimp-woocommerce', array());
+		$merged_options = (isset($data) && is_array($data)) ? array_merge($options, $data) : $options;
+		update_option('mailchimp-woocommerce', $merged_options);
+		return rest_ensure_response( $merged_options );
+	}
+
+	/**
+	 * Get the payment gateway schema, conforming to JSON Schema.
+	 *
+	 * @return array
+	 */
+	public function get_store_info_schema() {
+		$schema = array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'store_info',
+			'type'       => 'object',
+			'properties' => array(
+				'store_name' => array(
+					'description' => __( 'Store name.', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'store_street' => array(
+					'description' => __( 'Store street.', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'store_city' => array(
+					'description' => __( 'Store city.', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'store_state' => array(
+					'description' => __( 'Store state.', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'store_postal_code' => array(
+					'description' => __( 'Store postal code.', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'store_country' => array(
+					'description' => __( 'Store country.', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'store_phone' => array(
+					'description' => __( 'Store_phone', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'store_locale' => array(
+					'description' => __( 'Store locale', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'store_currency_code' => array(
+					'description' => __( 'Store currency code', 'woocommerce' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'store_phone' => array(
+					'description' => __( 'Store phone', 'woocommerce' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
