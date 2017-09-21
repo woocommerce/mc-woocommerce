@@ -19,6 +19,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class MailChimp_Woocommerce_Params_Checker extends MailChimp_Woocommerce_Admin {
 
+	/**
+	 * @return MailChimp_Woocommerce_Admin
+	 */
+	public static function connect()
+	{
+		$env = mailchimp_environment_variables();
+
+		return new self('mailchimp-woocommerce', $env->version);
+	}
+
 	public function validateStoreInfo( $params ) {
 		return this.validatePostStoreInfo( $params );
 	}
