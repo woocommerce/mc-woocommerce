@@ -90,7 +90,7 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/newsletter_setting', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_newsletter_setting' ),
+				'callback'            => array( $this, 'get_newsletter_settings' ),
 				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
 			),
 		//'schema' => array( $this, 'get_api_key_schema' ),
