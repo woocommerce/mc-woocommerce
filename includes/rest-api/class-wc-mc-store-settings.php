@@ -233,7 +233,7 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 
 	public function get_newsletter_settings( $request ) {
 		$handler        = MailChimp_Woocommerce_Params_Checker::connect();
-		$data           = $handler->getMailChimpLists(;
+		$data           = $handler->getMailChimpLists();
 		return rest_ensure_response( $data );
 	}
 
