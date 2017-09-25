@@ -32,6 +32,10 @@ class MailChimp_Woocommerce_Params_Checker extends MailChimp_Woocommerce_Admin {
 	public function validateStoreInfo( $params ) {
 		return $this->validatePostStoreInfo( $params );
 	}
+
+	public function validateCAmpaignDefaults( $params ) {
+		return $this->validatePostCampaignDefaults( $params );
+	}
 }
 
 /**
@@ -86,6 +90,14 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
 			),
 		'schema' => array( $this, 'get_store_info_schema' ),
+		) );
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/campaign_defaults', array(
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'update_campaign_defaults' ),
+				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+			),
+		//'schema' => array( $this, 'get_store_info_schema' ),
 		) );
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/newsletter_setting', array(
 			array(
@@ -229,6 +241,16 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 		);
 
 		return $this->add_additional_fields_schema( $schema );
+	}
+
+	public function update_campaign_defaults( $request ) {
+		$parameters     = $request->get_params();
+		$handler        = MailChimp_Woocommerce_Params_Checker::connect();
+		$data           = $handler->validateCAmpaignDefaults( $parameters );
+		$options        = get_option('mailchimp-woocommerce', array());
+		$merged_options = (isset($data) && is_array($data)) ? array_merge($options, $data) : $options;
+		update_option('mailchimp-woocommerce', $merged_options);
+		return rest_ensure_response( $merged_options );
 	}
 
 	public function get_newsletter_settings( $request ) {
