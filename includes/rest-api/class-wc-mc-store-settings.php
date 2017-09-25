@@ -87,6 +87,14 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 			),
 		'schema' => array( $this, 'get_store_info_schema' ),
 		) );
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/newsletter_setting', array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_newsletter_setting' ),
+				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+			),
+		//'schema' => array( $this, 'get_api_key_schema' ),
+		) );
 	}
 
 	/**
@@ -221,6 +229,12 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 		);
 
 		return $this->add_additional_fields_schema( $schema );
+	}
+
+	public function get_newsletter_settings( $request ) {
+		$handler        = MailChimp_Woocommerce_Params_Checker::connect();
+		$data           = $handler->getMailChimpLists(;
+		return rest_ensure_response( $data );
 	}
 
 	/**
