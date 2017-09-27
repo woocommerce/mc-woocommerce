@@ -33,8 +33,12 @@ class MailChimp_Woocommerce_Params_Checker extends MailChimp_Woocommerce_Admin {
 		return $this->validatePostStoreInfo( $params );
 	}
 
-	public function validateCAmpaignDefaults( $params ) {
+	public function validateCampaignDefaults( $params ) {
 		return $this->validatePostCampaignDefaults( $params );
+	}
+
+	public function validateNewsletterSettings( $params ) {
+		return $this->validatePostNewsletterSettings( $params );
 	}
 }
 
@@ -103,6 +107,14 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_newsletter_settings' ),
+				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+			),
+		//'schema' => array( $this, 'get_api_key_schema' ),
+		) );
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/newsletter_setting', array(
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'update_newsletter_settings' ),
 				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
 			),
 		//'schema' => array( $this, 'get_api_key_schema' ),
@@ -246,7 +258,7 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 	public function update_campaign_defaults( $request ) {
 		$parameters     = $request->get_params();
 		$handler        = MailChimp_Woocommerce_Params_Checker::connect();
-		$data           = $handler->validateCAmpaignDefaults( $parameters );
+		$data           = $handler->validateCampaignDefaults( $parameters );
 		$options        = get_option('mailchimp-woocommerce', array());
 		$merged_options = (isset($data) && is_array($data)) ? array_merge($options, $data) : $options;
 		update_option('mailchimp-woocommerce', $merged_options);
@@ -257,6 +269,16 @@ class WC_REST_MC_Store_Settings_Controller extends WC_REST_Payment_Gateways_Cont
 		$handler        = MailChimp_Woocommerce_Params_Checker::connect();
 		$data           = $handler->getMailChimpLists();
 		return rest_ensure_response( $data );
+	}
+
+	public function update_newsletter_settings( $request ) {
+		$parameters     = $request->get_params();
+		$handler        = MailChimp_Woocommerce_Params_Checker::connect();
+		$data           = $handler->validateNewsletterSettings( $parameters );
+		$options        = get_option('mailchimp-woocommerce', array());
+		$merged_options = (isset($data) && is_array($data)) ? array_merge($options, $data) : $options;
+		update_option('mailchimp-woocommerce', $merged_options);
+		return rest_ensure_response( $merged_options );
 	}
 
 	/**
