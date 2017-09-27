@@ -260,7 +260,7 @@ class MailChimp_Woocommerce_Admin extends MailChimp_Woocommerce_Options {
 	 * @param $input
 	 * @return array
 	 */
-	protected function validatePostApiKey($input)
+	public function validatePostApiKey($input)
 	{
 		$data = array(
 			'mailchimp_api_key' => isset($input['mailchimp_api_key']) ? $input['mailchimp_api_key'] : false,
